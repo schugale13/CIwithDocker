@@ -13,6 +13,8 @@
     docker rmi $(docker images -q)
 	#Delete all Volumes 
 	docker volume rm $(docker volume ls)
+	#Stoppe alle aktiven Dockercontainer
+	docker stop $(docker ps -a)
 	
 	
 	
