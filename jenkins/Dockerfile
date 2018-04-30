@@ -21,14 +21,19 @@ USER jenkins
 COPY plugins.txt /usr/share/jenkins/plugins.txt
 RUN /usr/local/bin/install-plugins.sh < /usr/share/jenkins/plugins.txt
 
-# Adding default Jenkins Seed Job
-COPY jobs/job-dsl-seed-job.xml /usr/share/jenkins/ref/jobs/job-dsl-seed-job/config.xml
-COPY jobs/docker-list-images.xml /usr/share/jenkins/ref/jobs/docker-list-images/config.xml
-COPY jobs/docker-list-running-conatiners.xml /usr/share/jenkins/ref/jobs/docker-list-running-conatiners/config.xml
 
 ############################################
 # Configure Jenkins
 ############################################
+# Adding default Jenkins jobs we want to have at every Clean Projekt Setup
+COPY jobs/job-dsl-seed-job.xml /usr/share/jenkins/ref/jobs/job-dsl-seed-job/config.xml
+COPY jobs/docker-list-images.xml /usr/share/jenkins/ref/jobs/docker-list-images/config.xml
+COPY jobs/docker-list-running-conatiners.xml /usr/share/jenkins/ref/jobs/docker-list-running-conatiners/config.xml
+
+#Configure the Template for the new Java applikation you want to use with your CI 
+COPY jobs/exampleJavaAPP.xml /usr/share/jenkins/ref/jobs/job-dsl-seed-job/config.xml
+
+
 # Jenkins settings
 COPY config/config.xml /usr/share/jenkins/ref/config.xml
 
