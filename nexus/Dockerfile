@@ -1,56 +1,65 @@
+# Copyright (c) 2016-present Sonatype, Inc.
 #
-# Creates a docker container with Nexus Artifact Repository
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
 #
+#      http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
 
-FROM centos:7
+FROM centos:centos7
 
-MAINTAINER Alexander Schug <alexander.schug@hotmail.com>
+MAINTAINER Sonatype <cloud-ops@sonatype.com>
 
-ENV SONATYPE_WORK /nexus-data
-ENV NEXUS_VERSION 2.14.1-01
-ENV NEXUS_HOME /opt/sonatype/nexus/
+LABEL vendor=Sonatype \
+      com.sonatype.license="Apache License, Version 2.0" \
+      com.sonatype.name="Nexus Repository Manager base image"
 
-RUN INSTALL_PKGS="java-1.8.0-openjdk.x86_64" && \
-    yum -y --setopt=tsflags=nodocs install $INSTALL_PKGS && \
-    rpm -V $INSTALL_PKGS && \
-    yum clean all  && \
-    localedef -f UTF-8 -i en_US en_US.UTF-8
+ARG NEXUS_VERSION=3.10.0-04
+ARG NEXUS_DOWNLOAD_URL=https://download.sonatype.com/nexus/3/nexus-${NEXUS_VERSION}-unix.tar.gz
+ARG NEXUS_DOWNLOAD_SHA256_HASH=8f3137471cdb002b6cf9d1874bbddb6ad280d4d7a492e363cfc5f54fbd45b5d9
 
-# Install packages necessary
-RUN yum -y install unzip && yum clean all
+ARG JAVA_URL=https://download.oracle.com/otn-pub/java/jdk/8u172-b11/a58eab1ec242421181065cdc37240b08/server-jre-8u172-linux-x64.tar.gz
+ARG JAVA_DOWNLOAD_SHA256_HASH=3d0a5db2300423a1fd6ee25c229dbd5320d79204c73844337f5b6a082d58541f
 
-ADD https://download.sonatype.com/nexus/oss/nexus-${NEXUS_VERSION}-bundle.zip nexus-${NEXUS_VERSION}-bundle.zip
+ENV JAVA_HOME=/opt/java
 
-# Extract Nexus
-RUN set -x \
-	&& unzip nexus-${NEXUS_VERSION}-bundle.zip \
-  && mkdir -p ${NEXUS_HOME} \
-	&& cp -r nexus-${NEXUS_VERSION}/* ${NEXUS_HOME} \
-	&& rm -rf nexus-${NEXUS_VERSION}-bundle.tar.gz \
-  && rm -rf nexus-${NEXUS_VERSION}
+# configure nexus runtime
+ENV SONATYPE_DIR=/opt/sonatype
+ENV NEXUS_HOME=${SONATYPE_DIR}/nexus \
+    NEXUS_DATA=/nexus-data \
+    NEXUS_CONTEXT='' \
+    SONATYPE_WORK=${SONATYPE_DIR}/sonatype-work \
+    DOCKER_TYPE='docker'
 
-RUN groupadd -r nexus -g 3001 && \
-    useradd -u 3001 -r -g nexus -m -d ${SONATYPE_WORK} -s /bin/bash -c "Nexus Run User" nexus
+ARG NEXUS_REPOSITORY_MANAGER_COOKBOOK_VERSION="release-0.5.20180307-101842.bde3aae"
+ARG NEXUS_REPOSITORY_MANAGER_COOKBOOK_URL="https://github.com/sonatype/chef-nexus-repository-manager/releases/download/${NEXUS_REPOSITORY_MANAGER_COOKBOOK_VERSION}/chef-nexus-repository-manager.tar.gz"
 
-VOLUME ${SONATYPE_WORK}
+ADD solo.json.erb /var/chef/solo.json.erb
+
+# Install using chef-solo
+RUN curl -L https://www.getchef.com/chef/install.sh | bash \
+    && /opt/chef/embedded/bin/erb /var/chef/solo.json.erb > /var/chef/solo.json \
+    && chef-solo \
+       --recipe-url ${NEXUS_REPOSITORY_MANAGER_COOKBOOK_URL} \
+       --json-attributes /var/chef/solo.json \
+    && rpm -qa *chef* | xargs rpm -e \
+    && rpm --rebuilddb \
+    && rm -rf /etc/chef \
+    && rm -rf /opt/chefdk \
+    && rm -rf /var/cache/yum \
+    && rm -rf /var/chef
+
+VOLUME ${NEXUS_DATA}
 
 EXPOSE 8081
+USER nexus
 
-WORKDIR /opt/sonatype/nexus
+ENV INSTALL4J_ADD_VM_PARAMS="-Xms1200m -Xmx1200m -XX:MaxDirectMemorySize=2g -Djava.util.prefs.userRoot=${NEXUS_DATA}/javaprefs"
 
-RUN INSTALL_PKGS="createrepo" && \
-    yum -y --setopt=tsflags=nodocs install $INSTALL_PKGS && \
-    rpm -V $INSTALL_PKGS && \
-    yum clean all
-
-ENV CONTEXT_PATH /
-ENV MAX_HEAP 768m
-ENV MIN_HEAP 256m
-ENV JAVA_OPTS -server -XX:MaxPermSize=192m -Djava.net.preferIPv4Stack=true
-ENV LAUNCHER_CONF ./conf/jetty.xml ./conf/jetty-requestlog.xml
-CMD java \
-  -Dnexus-work=${SONATYPE_WORK} -Dnexus-webapp-context-path=${CONTEXT_PATH} \
-  -Xms${MIN_HEAP} -Xmx${MAX_HEAP} \
-  -cp 'conf/:lib/*' \
-  ${JAVA_OPTS} \
-  org.sonatype.nexus.bootstrap.Launcher ${LAUNCHER_CONF}
+CMD ["sh", "-c", "${SONATYPE_DIR}/start-nexus-repository-manager.sh"]
