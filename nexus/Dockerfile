@@ -4,7 +4,7 @@
 
 FROM centos:7
 
-MAINTAINER Marcel Birkner <marcel.birkner@codecentric.de>
+MAINTAINER Alexander Schug <alexander.schug@hotmail.com>
 
 ENV SONATYPE_WORK /sonatype-work
 ENV NEXUS_VERSION 2.14.1-01
