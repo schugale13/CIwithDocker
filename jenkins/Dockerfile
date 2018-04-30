@@ -31,7 +31,7 @@ COPY jobs/docker-list-images.xml /usr/share/jenkins/ref/jobs/docker-list-images/
 COPY jobs/docker-list-running-conatiners.xml /usr/share/jenkins/ref/jobs/docker-list-running-conatiners/config.xml
 
 #Configure the Template for the new Java applikation you want to use with your CI 
-COPY jobs/exampleJavaAPP.xml /usr/share/jenkins/ref/jobs/job-dsl-seed-job/config.xml
+#COPY jobs/exampleJavaAPP.xml /usr/share/jenkins/ref/jobs/job-dsl-seed-job/config.xml
 
 
 # Jenkins settings
