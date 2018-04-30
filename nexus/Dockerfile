@@ -6,7 +6,7 @@ FROM centos:7
 
 MAINTAINER Alexander Schug <alexander.schug@hotmail.com>
 
-ENV SONATYPE_WORK /sonatype-work
+ENV SONATYPE_WORK /nexus-data
 ENV NEXUS_VERSION 2.14.1-01
 ENV NEXUS_HOME /opt/sonatype/nexus/
 

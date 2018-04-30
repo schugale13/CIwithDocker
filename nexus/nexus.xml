@@ -50,7 +50,6 @@
       </externalConfiguration>
     </repository>
   </repositories>
-
   <smtpConfiguration>
     <hostname>smtp-host</hostname>
     <port>25</port>
