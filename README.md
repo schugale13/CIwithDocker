@@ -11,3 +11,8 @@
     docker rm $(docker ps -a -q)
     # Delete all images
     docker rmi $(docker images -q)
+	#Delete all Volumes 
+	docker volume rm $(docker volume ls)
+	
+	
+	
