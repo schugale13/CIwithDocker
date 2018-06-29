@@ -12,6 +12,7 @@ bei den Beispielapplikationen handelt es sich jeweils um ein Hello world, da es 
 
 
 Weitere allgemein brauchbare Docker Comandos zum steuern des Jnekins containers:
+```
     #!/bin/bash
     # Delete all containers
     docker rm $(docker ps -a -q)
@@ -21,6 +22,6 @@ Weitere allgemein brauchbare Docker Comandos zum steuern des Jnekins containers:
 	docker volume rm $(docker volume ls)
 	#Stoppe alle aktiven Dockercontainer
 	docker stop $(docker ps -a)
-	
+```	
 	
 	
