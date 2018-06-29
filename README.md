@@ -1,11 +1,17 @@
-####Dokumentation der automatisch aufsetzbaren Systemlandschaft
+####Dokumentation des automatisch aufsetzbaren Jenkins CI Servers
 #
 #
-# Durch die verschiedenen Docker Compose Files kann varaiable ausgewählt werden, welche Teile der Continouse Integration Systemlandschaft
-# Installiert werden sollen. 
-#  1.
-#  2.
+Durch die verschiendenen dockerfiles in den einzelnen Ordnern kann ausgewählt werden welcher Jenkins mit welcher Beispielapplikation installiert und Konfiguriert werden soll. 
 
+Es gibt die Folgenden varianten:
+1. Jenkins CI Server mit Java und maven
+2. Jenksins CI Server mit Android und Gradle
+3. Jenkins CI Server mit iOS und Fastlane
+
+bei den Beispielapplikationen handelt es sich jeweils um ein Hello world, da es dabei nur darum geht die Umgebung für eine jeweilige ConfigurationsUmgebung herrichten zu können. 
+
+
+Weitere allgemein brauchbare Docker Comandos zum steuern des Jnekins containers:
     #!/bin/bash
     # Delete all containers
     docker rm $(docker ps -a -q)

@@ -1,4 +1,5 @@
 FROM jenkins/jenkins:lts
+MAINTAINER Alexander Schug <alexander.schug@jipp.it>
 
 USER root
 RUN apt-get update \
@@ -26,8 +27,8 @@ RUN /usr/local/bin/install-plugins.sh < /usr/share/jenkins/plugins.txt
 # Configure Jenkins
 ############################################
 # Adding default Jenkins jobs we want to have at every Clean Projekt Setup
-COPY jobs/docker-list-images.xml /usr/share/jenkins/ref/jobs/docker-list-images/config.xml
-COPY jobs/docker-list-running-conatiners.xml /usr/share/jenkins/ref/jobs/docker-list-running-conatiners/config.xml
+#COPY jobs/docker-list-images.xml /usr/share/jenkins/ref/jobs/docker-list-images/config.xml
+#COPY jobs/docker-list-running-conatiners.xml /usr/share/jenkins/ref/jobs/docker-list-running-conatiners/config.xml
 
 #Configure the Template for the new Java applikation you want to use with your CI 
 #COPY jobs/exampleJavaAPP.xml /usr/share/jenkins/ref/jobs/job-dsl-seed-job/config.xml
@@ -41,9 +42,9 @@ COPY config/hudson.tasks.Maven.xml /usr/share/jenkins/ref/hudson.tasks.Maven.xml
 COPY config/maven-global-settings-files.xml /usr/share/jenkins/ref/org.jenkinsci.plugins.configfiles.GlobalConfigFiles.xml
 
 # SSH Keys & Credentials
-COPY config/credentials.xml /usr/share/jenkins/ref/credentials.xml
-COPY config/ssh-keys/cd-demo /usr/share/jenkins/ref/.ssh/id_rsa
-COPY config/ssh-keys/cd-demo.pub /usr/share/jenkins/ref/.ssh/id_rsa.pub
+#COPY config/credentials.xml /usr/share/jenkins/ref/credentials.xml
+#COPY config/ssh-keys/cd-demo /usr/share/jenkins/ref/.ssh/id_rsa
+#COPY config/ssh-keys/cd-demo.pub /usr/share/jenkins/ref/.ssh/id_rsa.pub
 
 # tell Jenkins that no banner prompt for pipeline plugins is needed
 # see: https://github.com/jenkinsci/docker#preinstalling-plugins
