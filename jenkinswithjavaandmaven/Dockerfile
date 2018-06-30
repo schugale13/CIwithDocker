@@ -27,7 +27,7 @@ RUN /usr/local/bin/install-plugins.sh < /usr/share/jenkins/plugins.txt
 # Configure Jenkins
 ############################################
 # Adding default Jenkins jobs we want to have at every Clean Projekt Setup
-#COPY jobs/docker-list-images.xml /usr/share/jenkins/ref/jobs/docker-list-images/config.xml
+COPY jobs/helloWorld.xml /usr/share/jenkins/ref/jobs/HelloWorld/config.xml
 #COPY jobs/docker-list-running-conatiners.xml /usr/share/jenkins/ref/jobs/docker-list-running-conatiners/config.xml
 
 #Configure the Template for the new Java applikation you want to use with your CI 
