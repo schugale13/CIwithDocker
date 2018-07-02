@@ -8,14 +8,6 @@ RUN apt-get update \
       && rm -rf /var/lib/apt/lists/*
 RUN echo "jenkins ALL=NOPASSWD: ALL" >> /etc/sudoers
 
-# getting the docker-cli
-# --- Attention: docker.sock needs to be mounted as volume in docker-compose.yml
-# see: https://issues.jenkins-ci.org/browse/JENKINS-35025
-# see: https://get.docker.com/builds/
-# see: https://wiki.jenkins-ci.org/display/JENKINS/CloudBees+Docker+Custom+Build+Environment+Plugin#CloudBeesDockerCustomBuildEnvironmentPlugin-DockerinDocker
-RUN curl -sSL -o /bin/docker https://get.docker.io/builds/Linux/x86_64/docker-latest
-RUN chmod +x /bin/docker
-
 USER jenkins
 
 # installing specific list of plugins. see: https://github.com/jenkinsci/docker#preinstalling-plugins
@@ -26,26 +18,17 @@ RUN /usr/local/bin/install-plugins.sh < /usr/share/jenkins/plugins.txt
 ############################################
 # Configure Jenkins
 ############################################
-# Adding default Jenkins jobs we want to have at every Clean Projekt Setup
-COPY jobs/helloWorld.xml /usr/share/jenkins/ref/jobs/HelloWorld/config.xml
-#COPY jobs/docker-list-running-conatiners.xml /usr/share/jenkins/ref/jobs/docker-list-running-conatiners/config.xml
 
-#Configure the Template for the new Java applikation you want to use with your CI 
-#COPY jobs/exampleJavaAPP.xml /usr/share/jenkins/ref/jobs/job-dsl-seed-job/config.xml
-
-
-# Jenkins settings
+# Jenkins defaut settings
 COPY config/config.xml /usr/share/jenkins/ref/config.xml
 
-# Jenkins Settings, i.e. Maven, Groovy, ...
+# Jenkins Settings, i.e. Maven, 
 COPY config/hudson.tasks.Maven.xml /usr/share/jenkins/ref/hudson.tasks.Maven.xml
-COPY config/maven-global-settings-files.xml /usr/share/jenkins/ref/org.jenkinsci.plugins.configfiles.GlobalConfigFiles.xml
-
-# SSH Keys & Credentials
-#COPY config/credentials.xml /usr/share/jenkins/ref/credentials.xml
-#COPY config/ssh-keys/cd-demo /usr/share/jenkins/ref/.ssh/id_rsa
-#COPY config/ssh-keys/cd-demo.pub /usr/share/jenkins/ref/.ssh/id_rsa.pub
 
 # tell Jenkins that no banner prompt for pipeline plugins is needed
 # see: https://github.com/jenkinsci/docker#preinstalling-plugins
 RUN echo 2.0 > /usr/share/jenkins/ref/jenkins.install.UpgradeWizard.state
+
+
+# Adding the specific config for Java with Maven APP
+COPY jobs/helloWorld.xml /usr/share/jenkins/ref/jobs/HelloWorld/config.xml
