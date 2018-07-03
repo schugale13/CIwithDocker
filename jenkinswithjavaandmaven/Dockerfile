@@ -31,4 +31,4 @@ RUN echo 2.0 > /usr/share/jenkins/ref/jenkins.install.UpgradeWizard.state
 
 
 # Adding the specific config for Java with Maven APP
-COPY jobs/helloWorld.xml /usr/share/jenkins/ref/jobs/HelloWorld/config.xml
+COPY jobs/helloWorldJava.xml /usr/share/jenkins/ref/jobs/helloWorldJava/config.xml
