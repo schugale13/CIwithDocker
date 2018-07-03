@@ -1,19 +1,14 @@
 <?xml version='1.1' encoding='UTF-8'?>
-<maven2-moduleset plugin="maven-plugin@3.0">
+<project>
   <actions/>
-  <description>Dieses Projekt baut eine Java Maven applikation </description>
+  <description>Dieses Projekt baut eine Android Applikation mit Gradle</description>
   <keepDependencies>false</keepDependencies>
-  <properties>
-    <com.coravy.hudson.plugins.github.GithubProjectProperty plugin="github@1.28.1">
-      <projectUrl>https://github.com/schugale13/MyJavaAPP1.git/</projectUrl>
-      <displayName>Java Maven Application</displayName>
-    </com.coravy.hudson.plugins.github.GithubProjectProperty>
-  </properties>
+  <properties/>
   <scm class="hudson.plugins.git.GitSCM" plugin="git@3.6.4">
     <configVersion>2</configVersion>
     <userRemoteConfigs>
       <hudson.plugins.git.UserRemoteConfig>
-        <url>https://github.com/schugale13/MyJavaAPP1.git</url>
+        <url>https://github.com/codepath/android_hello_world.git</url>
       </hudson.plugins.git.UserRemoteConfig>
     </userRemoteConfigs>
     <branches>
@@ -31,41 +26,22 @@
   <blockBuildWhenUpstreamBuilding>false</blockBuildWhenUpstreamBuilding>
   <triggers/>
   <concurrentBuild>false</concurrentBuild>
-  <rootModule>
-    <groupId>fhj.swd.schugale13.bac1</groupId>
-    <artifactId>MyJavaAPP1</artifactId>
-  </rootModule>
-  <goals>clean install</goals>
-  <aggregatorStyleBuild>true</aggregatorStyleBuild>
-  <incrementalBuild>false</incrementalBuild>
-  <ignoreUpstremChanges>false</ignoreUpstremChanges>
-  <ignoreUnsuccessfulUpstreams>false</ignoreUnsuccessfulUpstreams>
-  <archivingDisabled>false</archivingDisabled>
-  <siteArchivingDisabled>false</siteArchivingDisabled>
-  <fingerprintingDisabled>false</fingerprintingDisabled>
-  <resolveDependencies>false</resolveDependencies>
-  <processPlugins>false</processPlugins>
-  <mavenValidationLevel>-1</mavenValidationLevel>
-  <runHeadless>false</runHeadless>
-  <disableTriggerDownstreamProjects>false</disableTriggerDownstreamProjects>
-  <blockTriggerWhenBuilding>true</blockTriggerWhenBuilding>
-  <settings class="jenkins.mvn.DefaultSettingsProvider"/>
-  <globalSettings class="jenkins.mvn.DefaultGlobalSettingsProvider"/>
-  <reporters/>
+  <builders>
+    <hudson.plugins.gradle.Gradle plugin="gradle@1.28">
+      <switches></switches>
+      <tasks>clean build</tasks>
+      <rootBuildScriptDir></rootBuildScriptDir>
+      <buildFile></buildFile>
+      <gradleName>gradle</gradleName>
+      <useWrapper>false</useWrapper>
+      <makeExecutable>false</makeExecutable>
+      <useWorkspaceAsHome>false</useWorkspaceAsHome>
+      <wrapperLocation></wrapperLocation>
+      <passAllAsSystemProperties>false</passAllAsSystemProperties>
+      <projectProperties></projectProperties>
+      <passAllAsProjectProperties>false</passAllAsProjectProperties>
+    </hudson.plugins.gradle.Gradle>
+  </builders>
   <publishers/>
-  <buildWrappers>
-    <hudson.plugins.ws__cleanup.PreBuildCleanup plugin="ws-cleanup@0.34">
-      <deleteDirs>false</deleteDirs>
-      <cleanupParameter></cleanupParameter>
-      <externalDelete></externalDelete>
-    </hudson.plugins.ws__cleanup.PreBuildCleanup>
-  </buildWrappers>
-  <prebuilders/>
-  <postbuilders/>
-  <runPostStepsIfResult>
-    <name>FAILURE</name>
-    <ordinal>2</ordinal>
-    <color>RED</color>
-    <completeBuild>true</completeBuild>
-  </runPostStepsIfResult>
-</maven2-moduleset>
+  <buildWrappers/>
+</project>
